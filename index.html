@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image processing demo pages</title>
+  </head>
+  <body onload="fillValues(); drawResampledImage()">
+    <h1>Image resampling</h1>
+    <p>
+      Demonstration of the effects of using different image resampling filters.
+    </p>
+    <p>
+      <a href="lichtenstein.png">Original image</a>: <span id="srcImageDesc"></span>.
+    </p>
+    <div>
+      <select id="method" onchange="drawResampledImage()">
+        <option value="nearestNeighbor" selected="selected">Nearest neighbor</option>
+        <option value="bilinear">Bilinear</option>
+      </select>
+    </div>
+    <div>
+      <input type="range" value="1.0" min="0.01" max="2.0" step="0.01" id="resizeFactor" style="width:400px" onchange="fillResolutions()"/>
+    </div>
+    <div>From resolution: <span id="srcResolution"></span></div>
+    <div>To resolution: <span id="dstResolution"></span></div>
+    <br/>
+    <button id="resample" onclick="drawResampledImage()">Resample</button>
+    <figure>
+      <img id="srcImg" src="lichtenstein.png" style="display: none;" alt=""/>
+      <canvas id="canvas" width="512" height="512" style="display: inline;"></canvas>
+    </figure>
+
+    <script src="resample.js"></script>
+    <script>
+      function fillSrcImageDesc () {
+        var srcImg = document.getElementById("srcImg");
+        document.getElementById("srcImageDesc").innerHTML = srcImg.width + "x" + srcImg.width;
+      }
+
+      function getFactor() {
+        return parseFloat(document.getElementById("resizeFactor").value, 10);
+      }
+
+      function fillResolutions () {
+        var srcImg = document.getElementById("srcImg");
+        var factor = getFactor();
+        var wSrc = srcImg.width;
+        var hSrc = srcImg.height;
+        var wDst = Math.round(wSrc * factor);
+        var hDst = Math.round(hSrc * factor);
+        document.getElementById("srcResolution").innerHTML = wSrc + "x" + hSrc;
+        document.getElementById("dstResolution").innerHTML = wDst + "x" + hDst;
+      }
+
+      function fillValues() {
+        fillSrcImageDesc();
+        fillResolutions();
+      }
+
+      function drawResampledImage() {
+        runResample('canvas', 'srcImg', getFactor());
+      }
+    </script>
+  </body>
+</html>
