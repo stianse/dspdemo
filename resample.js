@@ -84,6 +84,7 @@ Resample.resampleImage = function (filter, image, factor) {
 
 
 function runResample(canvasid, imgid, factor) {
+    var timeStart = performance.now();
     assert(canvasid);
     assert(imgid);
     assert(factor);
@@ -98,5 +99,6 @@ function runResample(canvasid, imgid, factor) {
     var ctx = canvas.getContext('2d');
     ctx.putImageData(imgdata, 0, 0);
     canvas.style.display = 'inline';
-    console.log ("done");
+    var timeEnd = performance.now();
+    console.log("Call runResample() took " + (timeEnd - timeStart) + " ms.");
 }
