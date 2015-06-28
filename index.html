@@ -13,8 +13,9 @@
     </p>
     <div>
       <select id="method" onchange="drawResampledImage()">
-        <option value="nearestNeighbor" selected="selected">Nearest neighbor</option>
-        <option value="bilinear">Bilinear</option>
+        <option value="point" selected="selected">Nearest neighbor / Point</option>
+        <option value="box">Average / Box</option>
+        <option value="triangle">Bilinear / Triangle / Tent</option>
       </select>
     </div>
     <div>
