@@ -75,6 +75,12 @@ function clamp (x, min, max) {
     return Math.max(Math.min (x, max), min);
 }
 
+function sinc (x) {
+    x *= Math.PI;
+    var result = Math.sin(x) / x;
+    return isFinite(result) ? result : 1;
+}
+
 Resample.separableFilter = function (src, dst, filter) {
     var i, j, k, l, m;
     var dstval;
@@ -155,8 +161,7 @@ Filter.filters.point = new FilterDef(null, Resample.nearestNeighbor, null);
 Filter.filters.box = new FilterDef(0.5, Resample.separableFilter,
     function (x) {
         return (x >= -0.5 && x < 0.5) ? 1 : 0;
-    }
-);
+    });
 
 // aka bilinear
 Filter.filters.triangle = new FilterDef(1, Resample.separableFilter,
@@ -164,8 +169,37 @@ Filter.filters.triangle = new FilterDef(1, Resample.separableFilter,
         if (x < 0)
             x = -x;
         return (x < 1) ? (1 - x) : 0;
-    }
-);
+    });
+
+Filter.filters.lanczos2 = new FilterDef(2, Resample.separableFilter,
+    function (x) {
+        if (x < 0)
+            x = -x;
+        if (x < 2)
+            return sinc(x) * sinc(x / 2);
+        else
+            return 0;
+    });
+
+Filter.filters.lanczos3 = new FilterDef(3, Resample.separableFilter,
+    function (x) {
+        if (x < 0)
+            x = -x;
+        if (x < 3)
+            return sinc(x) * sinc(x / 3);
+        else
+            return 0;
+    });
+
+Filter.filters.lanczos6 = new FilterDef(6, Resample.separableFilter,
+    function (x) {
+        if (x < 0)
+            x = -x;
+        if (x < 6)
+            return sinc(x) * sinc(x / 6);
+        else
+            return 0;
+    });
 
 
 FilterDef.prototype.initialize = function (srcWidth, srcHeight, dstWidth, dstHeight) {
@@ -241,5 +275,5 @@ function drawFilterFunction(drawid) {
         for (var x = xmin; x <= xmax; x += tick)
             filterPlot.push([x, filter.generate(x)]);
     }
-    Flotr.draw($(drawid), [filterPlot], { yaxis: { min: 0, max: 1 } });
+    Flotr.draw($(drawid), [filterPlot], { yaxis: { min: -0.25, max: 1.25 } });
 }
