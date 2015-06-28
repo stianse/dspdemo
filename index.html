@@ -30,6 +30,11 @@
       <canvas id="canvas" width="512" height="512" style="display: inline;"></canvas>
     </figure>
 
+    <div id="filterplot" style="width:600px;height:300px;"></div>
+
+    <script type="text/javascript" src="/external/flotr/lib/prototype-1.6.0.2.js"></script>
+    <script type="text/javascript" src="/external/flotr/flotr-0.2.0-alpha.js"></script>
+
     <script src="resample.js"></script>
     <script>
       function fillSrcImageDesc () {
@@ -59,6 +64,7 @@
 
       function drawResampledImage() {
         runResample('canvas', 'srcImg', getFactor());
+        drawFilterFunction('filterplot');
       }
     </script>
   </body>

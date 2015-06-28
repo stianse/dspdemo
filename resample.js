@@ -11,7 +11,6 @@ function assert(condition, message) {
 }
 
 
-
 var Resample = {};
 
 Resample.getSrcPosition = function (dstpos, factor) {
@@ -209,7 +208,7 @@ FilterDef.prototype.initialize = function (srcWidth, srcHeight, dstWidth, dstHei
 }
 
 
-function runResample(canvasid, imgid, factor) {
+function runResample(canvasid, imgid, factor, filtername) {
     var timeStart = performance.now();
     assert(canvasid);
     assert(imgid);
@@ -227,4 +226,20 @@ function runResample(canvasid, imgid, factor) {
     canvas.style.display = 'inline';
     var timeEnd = performance.now();
     console.log("Resampling with " + filtername + " took " + (timeEnd - timeStart) + " ms.");
+}
+
+
+function drawFilterFunction(drawid) {
+    var filtername = document.getElementById("method").value;
+    var filter = Filter.filters[filtername]
+    assert (filter, "Invalid filter name '" + filtername + "'");
+    var filterPlot = []
+    var xmax = Math.max(4, filter.support);
+    var xmin = Math.min(-4, -filter.support);
+    if (filter.generate) {
+    var tick = 0.01;
+        for (var x = xmin; x <= xmax; x += tick)
+            filterPlot.push([x, filter.generate(x)]);
+    }
+    Flotr.draw($(drawid), [filterPlot], { yaxis: { min: 0, max: 1 } });
 }
